@@ -2,3 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+
+.Toastify__toast {
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.Toastify__toast--warning {
+  background: #2c2b35;
+}
+
+.Toastify__toast--success {
+  background: #10B981;
+}
+
+@media (max-width: 480px) {
+  .Toastify__toast {
+    font-size: 12px;
+    margin: 4px;
+    padding: 8px;
+  }
+}

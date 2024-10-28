@@ -23,4 +23,5 @@ This is a simple review UI built with React and Tailwind CSS. It allows users to
 - Tailwind CSS
 - Vite
 - React Icons
+- Framer Motion
 
