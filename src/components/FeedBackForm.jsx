@@ -1,12 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 
-export default function FeedBackForm({handleSubmit,rating,text,setRating,setText}) {
+export default function FeedBackForm({
+  handleSubmit,
+  rating,
+  text,
+  setRating,
+  setText,
+  editFeedback,
+}) {
     const numbers = [1,2,3,4,5,6,7,8,9,10];
+  useEffect(() => {
+    if (editFeedback.edit === true) {
+      setRating(editFeedback.item.rating);
+      setText(editFeedback.item.text);
+    }
+  }, [editFeedback]);
+
   return (
-    <div className="bg-white rounded-lg p-4 sm:p-6 md:p-8 mb-8 w-full max-w-2xl mx-auto">
+    <div className="bg-white rounded-lg p-4 sm:p-6 md:p-8 mb-8 w-full max-w-3xl mx-auto">
       <form onSubmit={handleSubmit}>
         <h2 className="text-center mb-4 sm:mb-6 font-bold text-lg sm:text-xl">
-          How would you rate your service with us?
+          {editFeedback.edit ? 'Update Feedback' : 'How would you rate your service with us?'}
         </h2>
 
         {/* Rating buttons */}
@@ -38,14 +52,11 @@ export default function FeedBackForm({handleSubmit,rating,text,setRating,setText
               onChange={(e) => setText(e.target.value)}
               className="w-full p-2 sm:p-3 md:p-4 border rounded-lg focus:outline-none focus:border-fuchsia-500"
             />
-            {/* Validation Message */}
-            <div className="mt-2 text-sm">
-              {text.trim().length < 10 && (
-                <p className="text-red-500">
-                  Feedback must be at least 10 characters ({10 - text.trim().length} more needed)
-                </p>
-              )}
-            </div>
+            {text.trim().length < 10 && (
+              <div className="mt-2 text-red-500 text-sm">
+                Feedback must be at least 10 characters ({10 - text.trim().length} more needed)
+              </div>
+            )}
           </div>
 
           {/* Submit button */}
@@ -54,7 +65,7 @@ export default function FeedBackForm({handleSubmit,rating,text,setRating,setText
             disabled={text.trim().length < 10}
             className="w-full sm:w-auto bg-fuchsia-500 text-white px-4 sm:px-6 py-2 rounded-lg hover:bg-fuchsia-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-sm sm:text-base"
           >
-            Send
+            {editFeedback.edit ? 'Update' : 'Send'}
           </button>
         </div>
       </form>

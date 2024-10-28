@@ -11,7 +11,11 @@ export default function App() {
   const [feedback, setFeedback] = useState(feedbackData);
   const [rating, setRating] = useState(10);
   const [text, setText] = useState("");
-  
+  const [editFeedback, setEditFeedback] = useState({
+    item: {},
+    edit: false
+  });
+
   const handleDelete = (id) => {
     const newFeedback = feedback.filter((item) => item.id !== id);
     
@@ -58,16 +62,40 @@ export default function App() {
     );
   };
 
+  const handleEdit = (item) => {
+    setEditFeedback({
+      item,
+      edit: true
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (text.trim().length >= 10) {
       const newFeedback = {
-        id: Math.random().toString(),
+        // Generate new ID by finding max ID and adding 1
+        id: editFeedback.edit ? editFeedback.item.id : 
+            feedback.length > 0 ? Math.max(...feedback.map(item => item.id)) + 1 : 1,
         text,
         rating,
       };
-      setFeedback([newFeedback,...feedback]);
-      setText("");
+
+      if (editFeedback.edit) {
+        setFeedback(feedback.map((item) => 
+          item.id === editFeedback.item.id ? newFeedback : item
+        ));
+        setEditFeedback({
+          item: {},
+          edit: false
+        });
+        toast.success('Feedback updated successfully!');
+      } else {
+        setFeedback([newFeedback, ...feedback]);
+        toast.success('Feedback added successfully!');
+      }
+      
+      setRating(10);
+      setText('');
     }
   };
  
@@ -83,10 +111,15 @@ export default function App() {
           rating={rating} 
           text={text} 
           setRating={setRating} 
-          setText={setText} 
+          setText={setText}
+          editFeedback={editFeedback}
         />
         <FeedBackStarts feedback={feedback} />
-        <FeedBackList feedback={feedback} handleDelete={handleDelete} />
+        <FeedBackList 
+          feedback={feedback} 
+          handleDelete={handleDelete}
+          handleEdit={handleEdit}
+        />
       </div>
       
       <ToastContainer
